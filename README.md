@@ -23,17 +23,20 @@ The local photo picker only keeps photos in the browser until you choose **Downl
 ## Included image plan
 
 1. Main hero on a plain white background
-2. Front view
-3. Three-quarter view
+2. Front catalog view with framing chosen for the product category
+3. Front three-quarter view
 4. Side profile
 5. Back view only when supported by the references, otherwise a safe alternate angle
-6. Detail close-up
-7. Craft and finish close-up
-8. In-use context
-9. A second styled context
-10. Top-down view
-11. Clean alternate angle
+6. Product detail close-up
+7. Reference-supported seam, finish, or construction detail
+8. In-use or model-fit view in a clean catalog setting
+9. A second catalog pose or product angle, not a decorative scene
+10. Top-down product view
+11. Clean alternate catalog angle
+
+Secondary prompts use a coordinated white or very light gray studio look. Shirts are shown on a model from head to mid-thigh so the face and complete shirt remain visible; hats and caps use a close head-and-shoulders crop with the full brim in frame; trousers are framed from waist through the hems. Unseen backs and construction details are replaced with reference-supported views rather than invented.
 
 ## Review before listing
 
 AI image generation can alter small product details. Compare all results with the real item and remove anything inaccurate before listing. eBay requires images to accurately represent the item and disallows added graphics, text, borders, and watermarks. Use original photos to show condition, damage, labels, and exact contents. See [eBay picture policy](https://www.ebay.com/help/policies/picture-policy/picture-policy?id=4370).
+
