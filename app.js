@@ -5,55 +5,93 @@ let jobs = [];
 let filter = 'all';
 let toastTimer;
 
-const shots = [
-  { title: 'Main hero', kind: 'hero', direction: 'Create a clean eBay hero photo: the complete item centered, large and front-facing on a pure white seamless background (#ffffff), evenly lit with a soft natural contact shadow. Product only, no props, badges, text, borders, watermark, collage or added accessories.' },
-  { title: 'Front view', kind: 'secondary', direction: 'Show the actual product from a clear front angle as a clean eBay catalog photograph. Use a plain white or very light gray seamless studio background, soft even light, accurate natural color, and a centered close crop that makes the product easy to inspect. No room scene or styling props.' },
-  { title: 'Three-quarter view', kind: 'secondary', direction: 'Show the actual product from a front three-quarter angle that reveals its real depth and shape. Keep the whole product in frame, large and centered, on a plain bright studio background with soft even catalog lighting.' },
-  { title: 'Side profile', kind: 'secondary', direction: 'Show a true side-profile catalog view of the actual product so its real thickness, silhouette, and construction are clear. Use a plain white or light gray studio background. Do not invent or expose unseen features.' },
-  { title: 'Back view', kind: 'secondary', direction: 'Show the back only when that exact back is visible in the reference photos. If it is not shown, use a front three-quarter angle supported by the references instead. Keep the product large, centered, and on a plain bright studio background.' },
-  { title: 'Detail close-up', kind: 'secondary', direction: 'Make a sharp, tightly framed catalog close-up of one real material or feature clearly visible in the reference photos. Match its actual color and texture. Do not invent labels, markings, controls, seams, or construction.' },
-  { title: 'Craft and finish', kind: 'secondary', direction: 'Create a sharp catalog detail of real stitching, edges, joins, or finishing that can actually be seen in the supplied photos. Use soft neutral studio light and a simple light background. Do not suggest unseen quality claims or add details.' },
-  { title: 'In-use context', kind: 'secondary', direction: 'Show the actual product being worn or used in a simple, believable catalog pose suited to its category. Keep the product as the clear focal point against a clean light studio background. Do not add props, accessories, or parts that could be mistaken as included.' },
-  { title: 'Alternate catalog view', kind: 'secondary', direction: 'Create a second useful catalog image with a different natural pose or product angle, while keeping the same clean bright studio look. Keep styling minimal and the actual product fully recognizable; no room décor, extra items, text, or unverified functions.' },
-  { title: 'Top-down view', kind: 'secondary', direction: 'Show the actual product neatly from above on a plain white or very light gray surface. Keep its full outline visible, centered, and large in the square frame. Include no styling props or accessories.' },
-  { title: 'Clean alternate angle', kind: 'secondary', direction: 'Create one more clean eBay catalog photo from a genuinely different, reference-supported angle or natural pose. Keep the product large and clear on the same plain bright studio background, with realistic color and no decorative scene.' }
+const heroShot = { title: 'Main hero', kind: 'hero', direction: 'Create a clean eBay hero photo: the complete item centered, large and front-facing on a pure white seamless background (#ffffff), evenly lit with a soft natural contact shadow. Product only, no props, badges, text, borders, watermark, collage or added accessories.' };
+const modelPoses = [
+  { title: 'Model view · Front', pose: 'straight front-facing pose, relaxed arms kept away from the garment' },
+  { title: 'Model view · Three-quarter', pose: 'natural front three-quarter pose, shoulders gently turned toward camera' },
+  { title: 'Model view · Fit', pose: 'upright neutral pose with a subtle natural stance, showing how the item fits' },
+  { title: 'Model view · Alternate pose', pose: 'slight shoulder or body turn with both arms relaxed and the product unobstructed' },
+  { title: 'Model view · Catalog alternate', pose: 'a distinct but restrained catalog pose, still facing mostly toward camera' }
 ];
-const apparelDirections = [
-  'Show one exact shirt from the reference worn by one adult male model in a straightforward front-facing e-commerce catalog portrait. Crop from the top of the head to mid-thigh so the model face and the complete shirt from neckline to hem are both visible; the shirt should occupy most of the frame. Use a pure white seamless studio background, soft even light, a relaxed neutral pose, and plain dark neutral jeans. No jacket, layers, props, logos, text, or full-body distance framing.',
-  'Show the same exact shirt on one adult male model in a natural front three-quarter pose. Crop from head to mid-thigh; keep the complete shirt, sleeves, and hem unobstructed and large in frame. Use a plain white seamless e-commerce studio background and soft even light. Keep the fit and shirt shape natural; no jacket, props, or text.',
-  'Show one adult male model wearing the exact shirt in a modest side three-quarter pose, not an extreme profile that hides the front. Frame from head to mid-thigh so the entire shirt from collar to hem remains visible. Plain white studio background, soft balanced catalog light, neutral jeans, relaxed arms, no props or text.',
-  'Show the rear of the exact shirt on a model only if a rear reference photo was supplied. If no rear reference exists, make a different front three-quarter view instead. Keep the model framed head to mid-thigh, the full shirt visible, and the background pure white; never invent a back print, label, seam, or other unseen detail.',
-  'Create a close e-commerce detail photo of the real shirt fabric and collar area using the supplied shirt photos as the only source of truth. Show believable cotton texture and neckline stitching only as supported by the references; do not add a tag, logo, print, buttons, or invented weave. Bright neutral studio light, no text.',
-  'Create a close catalog photo of a visible sleeve hem or shirt seam from the supplied references. Keep the real fabric color and stitching faithful, with crisp focus and soft neutral-white studio light. Do not invent construction details, labels, or quality claims.',
-  'Show the exact shirt on one adult male model in a natural relaxed catalog pose, with hands resting naturally and not covering the garment. Crop from head to mid-thigh so the full shirt is the main subject. Use the same bright white studio background and soft professional e-commerce lighting; no park, room, props, extra layers, or text.',
-  'Create a second model catalog portrait with a subtle pose variation, such as a slight shoulder turn or one hand resting at the hip without covering the shirt. Keep the face and complete shirt visible from head to mid-thigh, with plain neutral jeans and a pure white seamless studio background. The shirt must remain the largest visual focus; no accessories, props, or text.',
-  'Show one exact shirt laid flat, front side up, as a clean eBay secondary product photo. Include the entire garment from collar to hem, centered on a pure white surface with soft natural contact shadow. Preserve the actual outline, sleeves, color, and visible stitching; no hanger, mannequin, styling props, text, or extra shirts.',
-  'Create a final clean model catalog image of the same exact shirt from a distinct but natural front angle. Use one adult male model, crop from head to mid-thigh, show the complete shirt without folds or arms hiding it, and keep the plain white studio background and neutral jeans consistent with the other model images. No lifestyle scenery, props, layers, logos, or text.'
-];
-const headwearDirections = [
-  'Create a straightforward front-facing e-commerce portrait of one adult model wearing the exact cap or hat from the references. Crop from upper chest to just above the head; the full crown and brim and the model face must be large, unobstructed, and sharply focused. Use a pure white seamless studio background and soft even light. No full body, props, eyewear, extra accessories, text, or cropped brim.',
-  'Show the exact cap or hat on one adult model in a natural front three-quarter head-and-shoulders portrait. Keep the complete crown and brim and most of the face visible; the hat should occupy the top third prominently. Pure white studio background, soft even light, no props or extra accessories.',
-  'Show a true side-profile head-and-shoulders portrait of one model wearing the exact hat. Keep the whole hat, including the brim tip, inside the frame and make the real crown profile and fit clear. Plain white studio background, clean e-commerce lighting, no props or text.',
-  'Show the back or closure of the exact hat on the model only if that area is visible in a supplied reference photo. Otherwise use a front three-quarter portrait. Keep the face and entire hat in a close head-and-shoulders crop on pure white; do not invent a strap, buckle, opening, logo, or unseen construction.',
-  'Make a tight product-detail photo of the actual crown fabric, panels, eyelets, or visible logo only where those details can be seen in the references. Preserve exact color and construction; do not add embroidery, labels, or markings. Use bright neutral studio light and no text.',
-  'Create a sharp close-up of a real brim edge, seam, stitching, or closure that is visible in the supplied photos. Show only the supported detail, in accurate color, against a simple bright neutral background. Do not invent interior or rear features.',
-  'Create a polished model catalog portrait with one adult wearing the exact hat, framed from shoulders upward. Keep the face and full hat prominent and unobstructed; use a plain bright studio background and natural expression. Avoid outdoor scenery, hair or hands covering the hat, props, and extra accessories.',
-  'Show the exact hat on one adult model from a slightly lower camera angle so the front brim and crown shape are easy to see. Crop shoulders upward, include the complete hat and face, and use a clean white studio with soft even light. Keep the hat as the focal point; no props or text.',
-  'Show the exact hat alone, front side facing up, in a clean eBay product photo on a pure white surface. Keep the complete brim and crown visible, centered, and large; preserve its true shape and color. No mannequin head, props, text, or invented details.',
-  'Create one final close model portrait from a distinct natural head turn, still showing the full exact hat and visible face. Crop at the shoulders, keep the hat large and sharply focused, and use the same plain white studio look. Do not crop the brim or add accessories.'
-];
-const trousersDirections = [
-  'Show one adult model wearing the exact trousers in a straight front-facing e-commerce catalog photo. Crop from the natural waist to just below both hems, keeping the waistband and complete legs visible and large in frame. Use a plain white seamless studio background, soft even light, and a simple neutral shirt tucked or ending above the waistband. No props, text, or full-body distance shot.',
-  'Show the same exact trousers on one model in a natural front three-quarter stance. Frame from waist to just below the hems so the full waistband, leg shape, and both hems remain in view. Plain white background, soft catalog lighting, simple neutral top, no props or text.',
-  'Show a true side-profile view of the model wearing the exact trousers. Crop from waist to just below the hems; keep the full side silhouette and leg shape visible. Preserve only reference-supported pockets, seams, color, and cut. Plain bright studio background, no props or text.',
-  'Show the back of the exact trousers on a model only if the rear details are visible in a supplied reference. Otherwise use a front-side three-quarter pose. Crop waist to below hems, and do not invent pockets, yoke seams, labels, or other unseen details. Plain white studio.',
-  'Create a tight e-commerce detail photo of the real trouser fabric from the supplied images. Preserve the actual color and visible texture; do not invent a weave, pattern, or material claim. Use crisp focus and bright neutral studio lighting.',
-  'Create a close catalog photo of a real waistband, pocket, fly, seam, or hem detail only if that exact detail appears in the references. Keep it sharp and color-accurate against a clean light background. Do not add hardware or stitching that is not shown.',
-  'Show the exact trousers on one adult model in a relaxed neutral standing pose. Crop from waist to just below both hems; keep the complete garment unobstructed, with hands away from pockets and seams. Plain white studio and soft even light, no props or text.',
-  'Create a second clear model catalog pose with a small natural shift in stance to show how the exact trousers fall at the waist and legs. Frame the waistband through the complete hems, close and centered on a bright white seamless background. Use a plain neutral top; no jacket, props, or text.',
-  'Show the exact trousers alone, front side up, laid neatly flat on a pure white surface. Include the whole garment with waistband and both hems fully in frame, keeping the legs straight and natural. No hanger, props, accessories, or text.',
-  'Create one final reference-supported three-quarter model view of the exact trousers, cropped waist to below hems. Keep the whole garment large, the legs unobstructed, the fit natural, and the studio background plain white. No scenery, props, extra layers, or text.'
-];
+const secondaryTemplates = {
+  clothing: [
+    ['Flat lay · Full front', 'Lay one exact shirt front-side up on a pure white surface. Show its complete outline from collar to hem, centered and without hanger, mannequin, props, or text.'],
+    ['Front product angle', 'Show one exact shirt alone from a slight front angle on seamless white. Keep collar, sleeves, body, and hem fully visible; no hanger or props.'],
+    ['Side silhouette', 'Show the actual shirt alone from a modest side angle on white, preserving its real sleeve and body proportions.'],
+    ['Back · Reference only', 'Show the back only if a supplied reference shows it. Otherwise use another front-supported angle. Do not invent a back print, label, or seam.'],
+    ['Fabric detail', 'Make a close, sharp photo of actual shirt fabric texture visible in the references. Preserve the true color; invent no weave or print.'],
+    ['Collar detail', 'Show a close crop of the real collar and neckline stitching only as supported by the references. No added tag or logo.'],
+    ['Sleeve and hem detail', 'Show one visible sleeve hem or bottom hem close-up. Match the actual stitching and fabric color; do not invent construction.'],
+    ['Seam detail', 'Create a crisp close catalog view of a real visible seam or stitch line on the shirt, on clean white.'],
+    ['Shirt drape', 'Show the shirt laid naturally to reveal its real fabric drape and shape, while keeping the whole garment visible on a white background.'],
+    ['Folded product', 'Show one exact shirt neatly folded on a pure white background, with the visible fabric color and neckline accurate. No packaging or props.'],
+    ['Sleeve shape', 'Create a product-only view that clearly shows both sleeve shapes and shoulder seams, using a white studio background.'],
+    ['Full outline', 'Show the complete shirt front-on, flat and undistorted, with generous white space and no added objects.'],
+    ['Bundle color lineup', 'For a bundle, arrange the supplied shirts in one clean side-by-side lineup, every included color distinct and visible exactly once. For a single item, show one full shirt alone. White background, no overlap, text, or collage.'],
+    ['Fabric close angle', 'Make a natural close-up of a second visible fabric area, not a fabricated label or graphic. Keep color faithful and background white.'],
+    ['Shoulder construction', 'Show the shoulder and sleeve join only where visible in the source photos; keep the real seams and proportions.'],
+    ['Alternate flat lay', 'Create a second neat white-background flat lay of the exact shirt, slightly rotated but with the full shirt visible and no styling props.'],
+    ['Clean product view', 'Show one exact shirt large and centered against white, with realistic fabric, clean edges, and no extra garment or text.']
+  ],
+  headwear: [
+    ['Front product view', 'Show the exact hat or cap alone facing front on white. Keep the entire brim and crown in frame and preserve its real shape.'],
+    ['Side product view', 'Show a true side profile of the exact hat on white, including the full brim tip and crown silhouette.'],
+    ['Top crown view', 'Show the actual crown from above on pure white, preserving visible panels and seams only.'],
+    ['Back · Reference only', 'Show the rear or closure only if it appears in a supplied photo; otherwise use a front-side view. Do not invent straps or labels.'],
+    ['Brim detail', 'Create a crisp close view of the real brim edge and stitching if visible. Keep color and curvature accurate.'],
+    ['Crown fabric detail', 'Show a close crop of actual crown fabric and visible panels. Do not add eyelets, logos, or embroidery absent from references.'],
+    ['Seam detail', 'Show real visible hat stitching or panel joins on a clean white background; invent no construction.'],
+    ['Closure detail', 'Show the closure only if it is visible in a supplied reference. Do not create a buckle, snap, or strap.'],
+    ['Interior · Reference only', 'Show the inside label or lining only if clearly present in the references; otherwise use a clean outside detail.'],
+    ['Underside · Reference only', 'Show the underside only when the supplied photos support it. Do not invent a brim color or interior pattern.'],
+    ['Material close-up', 'Create a sharp close-up of actual hat material with its exact color and texture, no invented pattern.'],
+    ['Upright product view', 'Show the hat upright with the crown and full brim visible on seamless white, without a mannequin or accessories.'],
+    ['Top-down product view', 'Show the entire hat from above on white, keeping its full outline and brim inside frame.'],
+    ['Front three-quarter product', 'Show a front three-quarter product-only view with the real crown depth and brim shape clear.'],
+    ['Bundle color lineup', 'For a bundle, arrange the supplied hats side by side with each included piece visible exactly once. For a single item, show one hat alone. Plain white, no overlap or text.'],
+    ['Panel detail', 'Show a close catalog view of one real crown panel or seam that is visible in the reference photos.'],
+    ['Clean alternate angle', 'Show the exact hat from a different reference-supported angle on white, with full brim and crown visible.']
+  ],
+  trousers: [
+    ['Flat lay · Full front', 'Lay the exact trousers front-side up on pure white. Include the full waistband and both hems, straight and undistorted.'],
+    ['Front product view', 'Show the exact trousers alone from the front on white, with the waistband through both hems fully visible.'],
+    ['Side silhouette', 'Show a clean side profile of the trousers laid naturally on white. Preserve only source-supported shape and details.'],
+    ['Back · Reference only', 'Show the back only if a supplied reference shows it; otherwise use a front-side angle. Invent no rear pockets or seams.'],
+    ['Fabric detail', 'Make a close catalog crop of real trouser fabric, matching the visible color and texture without adding a pattern.'],
+    ['Waistband detail', 'Show the actual waistband and closure only as visible in the references. Do not add a button, drawstring, or belt loop not shown.'],
+    ['Pocket detail', 'Show a real visible pocket close-up only if supported by the supplied photos; add no pocket or stitching.'],
+    ['Fly and closure', 'Show the fly or closure only if it is visible in a reference image. Preserve its exact construction.'],
+    ['Hem detail', 'Create a close photo of one actual trouser hem and stitching on a white background.'],
+    ['Stitching detail', 'Show a visible seam or stitch line in crisp focus; do not invent construction or quality claims.'],
+    ['Leg shape', 'Show both trouser legs laid straight and naturally, with their full outline and hems visible.'],
+    ['Top-down view', 'Photograph the full pair from directly above on pure white, waistband and hems both in frame.'],
+    ['Bundle color lineup', 'For a bundle, show the supplied pairs side by side with each included color distinct and visible exactly once. For a single item, show one pair alone. No overlap or text.'],
+    ['Drape and fit detail', 'Show the real fabric drape of one leg without cropping the waistband or hem; keep the background white.'],
+    ['Waist and leg proportion', 'Show the whole pair flat and centered so the actual rise, leg width, and length are easy to inspect.'],
+    ['Folded product', 'Show the exact trousers neatly folded on white, with one real color and no packaging or props.'],
+    ['Clean alternate angle', 'Show one reference-supported angle of the exact pair on white with full garment visible.']
+  ],
+  general: [
+    ['Front product view', 'Show the exact product from the front, large and centered on seamless white.'],
+    ['Three-quarter product view', 'Show a front three-quarter product-only view that reveals real depth and shape, on white.'],
+    ['Side profile', 'Show a true side profile of the actual item on white; do not invent unseen features.'],
+    ['Back · Reference only', 'Show the back only if visible in a supplied reference; otherwise use another supported angle.'],
+    ['Material close-up', 'Show one real material or surface detail from the references, sharp and color-accurate.'],
+    ['Construction detail', 'Show one visible join, edge, seam, or control only if it appears in the source photos.'],
+    ['Scale and shape', 'Show the complete product centered on white with proportions faithful to the references; no scale claims or rulers.'],
+    ['Top-down view', 'Photograph the exact product from above on white, full outline visible.'],
+    ['Three-quarter close view', 'Create a closer front angle that keeps the complete product recognizable and does not crop important parts.'],
+    ['Finish detail', 'Show a real finish or texture detail without adding text or unverified claims.'],
+    ['Included contents', 'For a bundle, show only supplied contents, each included piece once. For a single item, show that item alone. White background, no extras.'],
+    ['Bundle lineup', 'For a bundle, arrange the actual included pieces neatly side by side. For a single item, make a clean alternate full-product view. No overlap or text.'],
+    ['Edge detail', 'Show a real visible edge or contour in close focus, without inventing unseen features.'],
+    ['Alternate front view', 'Show a slightly different clean front angle on white, keeping the full actual item visible.'],
+    ['Alternate side view', 'Show another useful reference-supported angle with accurate shape and color.'],
+    ['Clean studio view', 'Create a sharp, centered, product-only catalog photo on pure white with no styling props.'],
+    ['Final alternate angle', 'Create one last honest eBay product angle supported by the source photos, on white.']
+  ]
+};
+let shots = [];
 const categoryPattern = {
   headwear: /\b(hats?|caps?|beanies?|headwear|visors?)\b|baseball cap|bucket hat/i,
   trousers: /\b(trousers?|pants?|jeans?|leggings?|shorts?)\b/i,
@@ -69,6 +107,21 @@ function detectedCategory() {
   if (selected !== 'auto') return selected;
   const text = `${$('productName').value} ${$('productDetails').value}`;
   return Object.entries(categoryPattern).find(([, pattern]) => pattern.test(text))?.[0] || 'general';
+}
+
+function buildShots() {
+  const isBundle = $('listingMode').value === 'bundle';
+  const quantity = Math.max(2, Number.parseInt($('packQuantity').value, 10) || 5);
+  const modelCount = isBundle ? Math.max(1, Math.min(5, quantity, photos.length || 1)) : 1;
+  const models = Array.from({ length: modelCount }, (_, index) => ({
+    title: isBundle && photos.length > 1 ? `Model view · Item ${index + 1}` : modelPoses[index].title,
+    kind: 'secondary', modelIndex: index,
+    referenceIndex: isBundle && photos.length > 1 ? index : null,
+    pose: modelPoses[index].pose
+  }));
+  const templates = secondaryTemplates[detectedCategory()] || secondaryTemplates.general;
+  const support = templates.slice(0, 17 - modelCount).map(([title, direction]) => ({ title, kind: 'secondary', direction }));
+  shots = [heroShot, ...models, ...support];
 }
 
 function notify(message) {
@@ -141,45 +194,30 @@ function makePrompt(shot) {
   const category = detectedCategory();
   const extra = details ? `Verified item details to preserve: ${details}.` : 'Use only features, materials, colors and details clearly visible in my attached reference photos; do not invent product claims.';
   const variantRule = isBundle
-    ? shot.kind === 'hero'
-      ? `This listing sells one bundle containing exactly ${quantity} separate pieces. The main hero must show the complete set together, with each included piece visible exactly once and every real color preserved.`
-      : `This listing sells one bundle containing exactly ${quantity} separate pieces. This is a secondary photo for that same bundle; the scene may focus on one included piece when the image direction asks for it, but must not imply that the full listing contains only one piece. Use only real items and colors from the uploaded references.`
+    ? `This listing is one ${quantity}-piece bundle. The hero shows the full set; an item-specific model view shows only its mapped item while remaining truthful to the bundle listing.`
     : variant
-      ? `The selected listing variation is ${variant}. Other uploaded photos may show alternate color options; use only ${variant} in this image. Do not mix colors, make a color collage, or imply that multiple variants are included.`
-      : 'If uploaded references show color options, use only one colorway per image. Do not combine variants or imply that multiple colors are included in a single item.';
-  let apparel = category === 'clothing' && shot.kind === 'secondary' ? apparelDirections[shotIndex - 1] : '';
-  let headwear = category === 'headwear' && shot.kind === 'secondary' ? headwearDirections[shotIndex - 1] : '';
-  let trousers = category === 'trousers' && shot.kind === 'secondary' ? trousersDirections[shotIndex - 1] : '';
-  let bundleDirection = '';
-  if (isBundle && shotIndex === 0) {
-    bundleDirection = `Show all ${quantity} included pieces together as one professional eBay bundle hero on a pure white seamless background (#ffffff). Arrange them in a clean diagonal cascade, each item offset enough that its full shape and color remain easy to see. Keep overlaps minimal: never hide a major part of any item. Fill the square frame with the complete set and modest white margins. Include each actual reference item exactly once; no props, text, labels, or extras.`;
-  } else if (isBundle && category === 'clothing' && shotIndex === 1) {
-    bundleDirection = `Show one included T-shirt from this ${quantity}-shirt pack on an adult model in a clean catalog portrait. Frame from the head down to the hips so the complete shirt is visible, matching a simple e-commerce studio model photo. Use a plain bright white background; no full-body scene, props, or text.`;
-  } else if (isBundle && category === 'clothing' && shotIndex === 7) {
-    bundleDirection = `Show one included T-shirt from this ${quantity}-shirt pack worn by an adult model in a polished catalog portrait. Frame from the head down to the hips so the complete shirt is visible. Use a clean bright white studio background, no props, extra garments, or text.`;
-  } else if (isBundle && category === 'headwear' && shotIndex === 1) {
-    bundleDirection = `Show one included hat from this ${quantity}-piece pack worn by an adult model in a clean front-facing catalog portrait. Crop tightly to the head and shoulders so the face and complete hat dominate the square frame. Use a bright white studio background; no full-body framing, props, or text.`;
-  } else if (isBundle && category === 'headwear' && shotIndex === 7) {
-    bundleDirection = `Show one included hat from this ${quantity}-piece pack worn by an adult model in a polished three-quarter head-and-shoulders portrait. Keep the full hat and face large and clear against a bright white studio background; no full-body framing, props, or text.`;
-  } else if (isBundle && category === 'trousers' && shotIndex === 1) {
-    bundleDirection = `Show one included pair of trousers from this ${quantity}-piece pack worn by an adult model. Crop from waist to ankles so the full pair is prominent, with a clean white studio background and no props or text.`;
-  } else if (isBundle && category === 'trousers' && shotIndex === 7) {
-    bundleDirection = `Show one included pair of trousers from this ${quantity}-piece pack in a clean e-commerce model photo, framed from waist to ankles. Keep the full pair visible against a bright white studio background; no full-body distance shot, props, or text.`;
+      ? `The selected listing variation is ${variant}. Use only that exact variation; do not mix or collage colors.`
+      : 'Use only one item/colorway per photo. Never combine color variants.';
+  let direction = shot.direction || '';
+  if (shot.kind === 'hero' && isBundle) direction = `Show all ${quantity} included pieces together exactly once as a professional eBay bundle hero on a pure white seamless background. Arrange in a neat, slightly staggered catalog lineup; keep every item and true color fully visible with minimal overlap. No props, text, labels, or extra products.`;
+  if (shot.modelIndex != null) {
+    const ref = shot.referenceIndex == null ? null : photos[shot.referenceIndex];
+    const source = ref
+      ? `Use uploaded reference photo #${shot.referenceIndex + 1} (${ref.name}) as the sole source for the product worn in this image. This is bundle item #${shot.referenceIndex + 1}; show this exact item and color only. Do not substitute, recolor, combine, duplicate, or borrow details from another uploaded item.`
+      : `Use the selected product reference as the sole source for the item worn. Show one item/color only; do not combine variants.`;
+    const crop = category === 'headwear'
+      ? 'Adult model wearing the exact hat/cap. Tight head-and-shoulders catalog portrait; face, crown, and entire brim are large, clear, and fully inside frame.'
+      : category === 'trousers'
+        ? 'Adult model wearing the exact trousers. Crop from natural waist through both complete hems/ankles; keep upper body mostly out of frame.'
+        : category === 'clothing'
+          ? 'Adult model wearing the exact garment. Crop from head to mid-thigh; face and complete garment from collar through bottom hem must be visible.'
+          : 'Adult model wearing or naturally holding the exact product in a close catalog portrait; item large and fully visible.';
+    direction = `${source} ${crop} Pose: ${shot.pose}.`;
   }
-  const secondaryRule = shot.kind === 'secondary'
-    ? `This is image ${shotIndex + 1} in a coordinated set of eBay listing photos. Use polished, realistic marketplace catalog photography: a plain bright white or very light gray studio background, soft even lighting, neutral color balance, and a close product-first composition. Follow the specific camera angle and crop in the shot direction exactly; do not switch to a decorative room, outdoor scene, editorial fashion campaign, product collage, floating cutout, or distant full-body view. ${isBundle ? `For this secondary view of a ${quantity}-piece bundle, show only the specific included piece(s) requested by this shot; never imply that extra pieces are included.` : ''}`
-    : '';
-  const direction = bundleDirection || headwear || trousers || apparel || shot.direction;
-  const selectedBundleColorRule = isBundle && shot.kind === 'secondary'
-    ? variant
-      ? `When this view focuses on one piece, use only the exact ${variant} colorway from the references; do not blend it with other colors.`
-      : 'When this view focuses on one piece, choose one actual colorway exactly as shown in the references; do not blend colors or invent a new shade.'
-    : '';
-  const selectedBundleColorText = selectedBundleColorRule ? ` ${selectedBundleColorRule}` : '';
-  const framingRule = shot.kind === 'hero'
-    ? 'Center the item, keep it fully visible, use natural product photography, and make it sharp enough for an eBay listing.'
-    : `Keep product identity, silhouette, colors, materials, visible markings, components, and proportions faithful to the correct reference. Do not redesign, embellish, repair, recolor, duplicate, merge, or distort the product. Follow the requested crop: do not crop off a required garment hem, trouser waistband/hem, or hat brim/crown; for a detail shot, fill the frame with only the requested real detail. Use realistic anatomy and natural hands on model photos. No text, typography, claims, measurements, graphic overlays, frames, watermarks, price tags, extra products, or collages. Make the requested product or detail sharp and large enough to inspect in an eBay listing.`;
-  return `Create exactly one square 1:1 photorealistic eBay listing photograph. The uploaded photos are real reference photos of the item. Treat them as authoritative. Product: ${name}. ${variantRule}${selectedBundleColorText} ${extra} Image purpose: ${shot.title}. ${secondaryRule} ${direction} ${framingRule}`;
+  const background = 'Pure white seamless studio background (#ffffff), soft even light, neutral white balance, crisp realistic e-commerce catalog photography. No lifestyle setting, props, text, watermark, graphics, collage, or extra product.';
+  const selectedRule = isBundle && shot.kind === 'secondary' && variant ? ` Focus on exact ${variant} color only.` : '';
+  const accuracy = 'Treat uploaded photos as authoritative. Preserve exact product identity, silhouette, colors, materials, visible markings, components, and proportions. Never redesign, embellish, recolor, duplicate, merge, or distort. Follow the requested crop precisely; keep all required parts inside frame. For detail shots, crop only to the specified real detail. Use natural anatomy and hands in model photos. No text, claims, measurements, borders, price tags, or invented construction.';
+  return `Create exactly one square 1:1 photorealistic eBay listing photograph. Product: ${name}. ${variantRule} ${extra} Image purpose: ${shot.title}. Image ${shotIndex + 1} of 18. ${background} ${direction} ${selectedRule} ${accuracy}`;
 }
 function renderGallery() {
   const gallery = $('gallery'); gallery.innerHTML = '';
@@ -213,15 +251,16 @@ function renderGallery() {
 }
 function updateProgress() {
   const count = jobs.filter(job => job.dataUrl).length;
-  $('progressText').textContent = jobs.length ? `${count} of 11 results added` : 'Waiting for product name';
-  $('progressBar').style.width = jobs.length ? `${Math.round(count / 11 * 100)}%` : '0%';
+  $('progressText').textContent = jobs.length ? `${count} of 18 results added` : 'Waiting for product name';
+  $('progressBar').style.width = jobs.length ? `${Math.round(count / 18 * 100)}%` : '0%';
 }
 function preparePrompts() {
   const name = $('productName').value.trim();
   if (!name) return notify('Pehle product ka naam likhein.');
+  buildShots();
   jobs = shots.map((shot, index) => ({ ...shot, index, dataUrl: '', mimeType: '', fileName: '' }));
   filter = 'all'; document.querySelectorAll('.tab').forEach(tab => tab.classList.toggle('active', tab.dataset.filter === 'all'));
-  renderGallery(); updateProgress(); notify('11 prompts tayyar hain. Copy karke Gemini app mein use karein.');
+  renderGallery(); updateProgress(); notify('18 prompts tayyar hain: hero, item-specific model views aur white-background product photos.');
 }
 $('generateBtn').addEventListener('click', preparePrompts);
 $('exportGeminiPackage').addEventListener('click', async () => {
@@ -254,7 +293,7 @@ $('exportGeminiPackage').addEventListener('click', async () => {
     const files = [{ name: 'manifest.json', data: new TextEncoder().encode(JSON.stringify(manifest, null, 2)) }];
     photoEntries.forEach(entry => files.push({ name: entry.path, data: entry.bytes }));
     saveBlob(zipStore(files), `${safeName(productName)}-gemini-package.zip`);
-    notify('Gemini package download ho gaya: photos, details aur 11 prompts shamil hain.');
+    notify('Gemini package download ho gaya: photos, details aur 18 prompts shamil hain.');
   } catch (error) {
     notify(`Package nahi bana: ${error.message || 'dobara koshish karein.'}`);
   }
@@ -292,7 +331,7 @@ $('downloadAll').addEventListener('click', async () => {
   if (!jobs.length) return;
   const base = safeName($('productName').value);
   const prompts = jobs.map(job => `${String(job.index + 1).padStart(2, '0')} — ${job.title}\n${makePrompt(shots[job.index])}`).join('\n\n');
-  const promptBytes = new TextEncoder().encode(`eBay Listing Image Studio — ${$('productName').value}\nImages added: ${jobs.filter(job => job.dataUrl).length} of 11\n\n${prompts}`);
+  const promptBytes = new TextEncoder().encode(`eBay Listing Image Studio — ${$('productName').value}\nImages added: ${jobs.filter(job => job.dataUrl).length} of 18\n\n${prompts}`);
   const files = [{ name: 'prompts.txt', data: promptBytes }];
   for (const job of jobs.filter(item => item.dataUrl)) {
     files.push({ name: `${String(job.index + 1).padStart(2, '0')}-${safeName(job.title)}.${extFor(job.mimeType)}`, data: new Uint8Array(await imageBlob(job).arrayBuffer()) });
