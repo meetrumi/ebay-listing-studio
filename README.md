@@ -14,6 +14,8 @@ A local prompt organizer for creating one eBay hero image and ten secondary imag
 
 This is a static app and does not need a build step or API key. The included GitHub Actions workflow publishes `index.html`, `app.js`, and `style.css` to GitHub Pages whenever `main` is updated. In the repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions** once. The app uses relative asset paths so it works from a repository subpath.
 
+After the first successful Pages deployment, open `https://meetrumi.github.io/ebay-listing-studio/` to use the hosted version.
+
 The local photo picker only keeps thumbnails in the browser to help you keep track of references; it does not upload them. Attach the original photos yourself in Gemini. Keep one Gemini conversation for the image set so it can refer back to the same item photos. The free Gemini app may limit how many images you can create; the app does not bypass those limits.
 
 ## Included image plan
