@@ -10,13 +10,15 @@ A local prompt organizer for creating one eBay hero image and ten secondary imag
 4. Choose **Open free Gemini app**. Attach the real product photos directly in Gemini, then copy each matching prompt from Listing Studio into that same Gemini chat.
 5. Download each Gemini result and add it to its matching card. **Download ZIP** bundles the images you've added plus all 11 prompts.
 
+To move everything into the companion app at once, add up to five photos and choose **Download Gemini package**. The ZIP contains `manifest.json`, all 11 prompts, product details, and the selected reference photos. Import that single ZIP in the companion app, then review the 11 prompts before generating.
+
 ## GitHub Pages
 
 This is a static app and does not need a build step or API key. The included GitHub Actions workflow publishes `index.html`, `app.js`, and `style.css` to GitHub Pages whenever `main` is updated. In the repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions** once. The app uses relative asset paths so it works from a repository subpath.
 
 After the first successful Pages deployment, open `https://meetrumi.github.io/ebay-listing-studio/` to use the hosted version.
 
-The local photo picker only keeps thumbnails in the browser to help you keep track of references; it does not upload them. Attach the original photos yourself in Gemini. Keep one Gemini conversation for the image set so it can refer back to the same item photos. The free Gemini app may limit how many images you can create; the app does not bypass those limits.
+The local photo picker only keeps photos in the browser until you choose **Download Gemini package**. That ZIP includes the photos you selected; upload it to Gemini only when you want to share those references there. Keep one Gemini conversation for the image set so it can refer back to the same item photos. The free Gemini app may limit how many images you can create; the app does not bypass those limits.
 
 ## Included image plan
 

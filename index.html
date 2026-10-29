@@ -48,8 +48,10 @@
           <label class="dropzone" id="dropzone" for="photoInput"><input type="file" id="photoInput" accept="image/png,image/jpeg,image/webp" multiple hidden><span class="upload-icon">＋</span><b>Drop photos here or <u>browse</u></b><small>JPG, PNG or WEBP · 12 MB max each</small></label>
           <div class="photo-list" id="photoList"></div>
           <button id="generateBtn" class="primary-button" disabled><span>Prepare 11 prompts</span><span>→</span></button>
+          <button id="exportGeminiPackage" class="primary-button" disabled><span>Download for Gemini · one ZIP</span><span>↓</span></button>
+          <small class="field-hint">Includes product details, 11 prompts, and all selected photos.</small>
           <a class="primary-button" id="openGemini" href="https://gemini.google.com/app" target="_blank" rel="noreferrer"><span>Open free Gemini app</span><span>↗</span></a>
-          <div class="privacy-note"><span>▣</span> This app never sends your photos to Google. Upload the same references directly in Gemini when you use a prompt. Gemini's free-use limits may apply.</div>
+          <div class="privacy-note"><span>▣</span> The ZIP includes your selected photos and all 11 prompts. Upload it to the Gemini companion app when you’re ready; Gemini’s free-use limits may apply.</div>
         </aside>
         <section class="results-panel">
           <div class="panel-heading results-heading"><div><div class="step">STEP 02</div><h2>Your prompts & images</h2></div><div id="progressText" class="progress-text">Waiting for product name</div></div>
@@ -64,7 +66,7 @@
     </main>
   </div>
   <div id="toast" class="toast" role="status"></div>
-  <dialog id="helpDialog"><button id="closeHelp" class="close-dialog">×</button><div class="step">QUICK GUIDE · NO API KEY</div><h2>Use Gemini for free</h2><ol><li>Enter the product name and only verified details, then prepare the prompts.</li><li>Open Gemini and attach your real product photos there. Keep using the same Gemini chat for all 11 images.</li><li>Copy each card's prompt, paste it in Gemini, and download the image it creates.</li><li>Use “Add result” on the matching card. Download ZIP saves your images and all prompts together.</li></ol><p>This app does not call Gemini or use a paid API. Gemini may apply its own free-account limits. Review every image for accuracy before listing it.</p><a href="https://gemini.google.com/app" target="_blank" rel="noreferrer">Open Gemini ↗</a></dialog>
+  <dialog id="helpDialog"><button id="closeHelp" class="close-dialog">×</button><div class="step">QUICK GUIDE · NO API KEY</div><h2>Use Gemini for free</h2><ol><li>Enter the product name and verified details, then add up to five product photos.</li><li>Choose “Prepare 11 prompts,” then “Download for Gemini · one ZIP.”</li><li>In the Gemini companion app, choose Manual Import → ZIP Package, upload that ZIP, and review the imported photos and prompts.</li><li>Choose “Generate All 11 Images.” Gemini may apply its own free-use limits; review every result before listing.</li></ol><p>Listing Studio does not call Gemini or use a paid API. The ZIP contains the photos you chose, so upload it only when you want to share those references with Gemini.</p><a href="https://gemini.google.com/app" target="_blank" rel="noreferrer">Open Gemini ↗</a></dialog>
   <script src="app.js" defer></script>
 </body>
 </html>

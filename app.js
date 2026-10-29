@@ -78,7 +78,10 @@ function notify(message) {
 function safeName(value) {
   return (value || 'ebay-listing').normalize('NFKD').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase().slice(0, 50) || 'ebay-listing';
 }
-function updateReady() { $('generateBtn').disabled = ! $('productName').value.trim(); }
+function updateReady() {
+  $('generateBtn').disabled = ! $('productName').value.trim();
+  $('exportGeminiPackage').disabled = ! $('productName').value.trim() || photos.length === 0;
+}
 function readData(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -112,6 +115,7 @@ function renderPhotos() {
     remove.onclick = () => { photos.splice(index, 1); renderPhotos(); };
     chip.append(img, remove); $('photoList').append(chip);
   });
+  updateReady();
 }
 async function addFiles(files) {
   const incoming = [...files].slice(0, Math.max(0, 5 - photos.length));
@@ -211,6 +215,41 @@ function preparePrompts() {
   renderGallery(); updateProgress(); notify('11 prompts tayyar hain. Copy karke Gemini app mein use karein.');
 }
 $('generateBtn').addEventListener('click', preparePrompts);
+$('exportGeminiPackage').addEventListener('click', async () => {
+  const productName = $('productName').value.trim();
+  if (!productName) return notify('Pehle product ka naam likhein.');
+  if (!photos.length) return notify('Package mein shamil karne ke liye kam az kam 1 product photo add karein.');
+
+  // Rebuild prompts from the current form values so the ZIP never contains stale prompt text.
+  preparePrompts();
+  try {
+    const photoEntries = photos.map((photo, index) => {
+      const path = `photos/${String(index + 1).padStart(2, '0')}-${safeName(photo.name)}.${extFor(photo.mimeType)}`;
+      const binary = atob(photo.data);
+      const bytes = new Uint8Array(binary.length);
+      for (let offset = 0; offset < binary.length; offset++) bytes[offset] = binary.charCodeAt(offset);
+      return { path, bytes, manifest: { fileName: photo.name, path, mimeType: photo.mimeType } };
+    });
+    const manifest = {
+      format: 'ebay-listing-studio-gemini-package',
+      version: 1,
+      productName,
+      variation: $('targetVariant').value.trim(),
+      verifiedDetails: $('productDetails').value.trim(),
+      category: detectedCategory(),
+      isBundle: $('listingMode').value === 'bundle',
+      bundleQuantity: $('listingMode').value === 'bundle' ? Math.max(2, Number.parseInt($('packQuantity').value, 10) || 5) : 1,
+      photos: photoEntries.map(entry => entry.manifest),
+      prompts: shots.map(shot => makePrompt(shot))
+    };
+    const files = [{ name: 'manifest.json', data: new TextEncoder().encode(JSON.stringify(manifest, null, 2)) }];
+    photoEntries.forEach(entry => files.push({ name: entry.path, data: entry.bytes }));
+    saveBlob(zipStore(files), `${safeName(productName)}-gemini-package.zip`);
+    notify('Gemini package download ho gaya: photos, details aur 11 prompts shamil hain.');
+  } catch (error) {
+    notify(`Package nahi bana: ${error.message || 'dobara koshish karein.'}`);
+  }
+});
 document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', () => { filter = tab.dataset.filter; document.querySelectorAll('.tab').forEach(item => item.classList.toggle('active', item === tab)); renderGallery(); }));
 
 function saveBlob(blob, filename) {
