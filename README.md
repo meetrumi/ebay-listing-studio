@@ -1,16 +1,16 @@
 # Listing Studio
 
-A local prompt organizer for creating one eBay hero image and ten secondary images with the Gemini app's free image-generation experience. It does not call the Gemini API, ask for an API key, or send product photos anywhere. Gemini's free-account limits and access can vary.
+A local prompt organizer for preparing one eBay hero image and 17 secondary prompts for Gemini's free image-generation experience. It does not call the Gemini API, ask for an API key, or send product photos anywhere. Gemini's free-account limits and access can vary.
 
 ## Start
 
 1. Run `Start-Listing-Studio.bat` (Node.js 20 or newer is required).
 2. The app opens at `http://127.0.0.1:4173`.
-3. Enter the product name and verified details, then choose **Prepare 11 prompts**.
+3. Enter the product name and verified details, then choose **Prepare 18 prompts**.
 4. Choose **Open free Gemini app**. Attach the real product photos directly in Gemini, then copy each matching prompt from Listing Studio into that same Gemini chat.
-5. Download each Gemini result and add it to its matching card. **Download ZIP** bundles the images you've added plus all 11 prompts.
+5. Download each Gemini result and add it to its matching card. **Download ZIP** bundles the images you've added plus all 18 prompts.
 
-To move everything into the companion app at once, add up to five photos and choose **Download for Gemini · one ZIP**. The ZIP contains `manifest.json`, all 11 prompts, product details, and the selected reference photos. Import that single ZIP in the companion app, then review the 11 prompts before generating.
+Add up to five photos and choose **Download for Gemini · one ZIP** to bundle `manifest.json`, all 18 prompts, product details, and the selected reference photos. For a multi-item pack, upload one clear photo per included item/color: each uploaded item gets its own model prompt explicitly mapped to that photo and filename. With five item photos, five distinct model prompts are generated. Copy each prompt into Gemini with its matching reference photo, then review every result.
 
 ## GitHub Pages
 
@@ -22,19 +22,9 @@ The local photo picker only keeps photos in the browser until you choose **Downl
 
 ## Included image plan
 
-1. Main hero on a plain white background
-2. Front catalog view with framing chosen for the product category
-3. Front three-quarter view
-4. Side profile
-5. Back view only when supported by the references, otherwise a safe alternate angle
-6. Product detail close-up
-7. Reference-supported seam, finish, or construction detail
-8. In-use or model-fit view in a clean catalog setting
-9. A second catalog pose or product angle, not a decorative scene
-10. Top-down product view
-11. Clean alternate catalog angle
+The prepared set contains exactly 18 prompts: one main hero plus 17 secondary images. In bundle mode, one model prompt is created for each uploaded item reference (up to five); the remaining secondary prompts use category-specific product angles and close details. For five products this means five separately mapped model images, one per uploaded photo, plus the full-set hero.
 
-Secondary prompts use a coordinated white or very light gray studio look. Shirts are shown on a model from head to mid-thigh so the face and complete shirt remain visible; hats and caps use a close head-and-shoulders crop with the full brim in frame; trousers are framed from waist through the hems. Unseen backs and construction details are replaced with reference-supported views rather than invented.
+Prompts use a pure white studio background and a coordinated eBay catalog style. Shirts are framed from the model's head to mid-thigh so the face and complete shirt remain visible; hats and caps use a close head-and-shoulders crop with the whole brim in frame; trousers are framed from waist through both hems. Unseen backs and construction details are replaced with reference-supported views rather than invented. In a pack, use one clear uploaded image per included item/color so every model prompt can identify its exact source.
 
 ## Review before listing
 
